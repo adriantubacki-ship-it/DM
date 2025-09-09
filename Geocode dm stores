@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p output
           python scripts/batch_geocode_google.py \
-            --input "data/dm stores_DE & AT_August 2025.xlsx" \
+            --input "dm/dm stores_DE & AT_August 2025.xlsx" \
             --output "output/dm_stores_with_coords.xlsx" \
             --cache "output/geocode_cache.csv" \
             --sleep 0.05
