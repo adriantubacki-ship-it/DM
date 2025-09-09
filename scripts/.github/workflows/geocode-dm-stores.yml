@@ -1,0 +1,45 @@
+name: Geocode dm stores
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'data/dm stores_DE & AT_August 2025.xlsx'
+      - 'scripts/batch_geocode_google.py'
+      - '.github/workflows/geocode-dm-stores.yml'
+
+jobs:
+  geocode:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install googlemaps pandas tenacity python-dotenv openpyxl
+
+      - name: Run geocoding
+        env:
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+        run: |
+          mkdir -p output
+          python scripts/batch_geocode_google.py \
+            --input "data/dm stores_DE & AT_August 2025.xlsx" \
+            --output "output/dm_stores_with_coords.xlsx" \
+            --cache "output/geocode_cache.csv" \
+            --sleep 0.05
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dm-stores-with-coords
+          path: |
+            output/dm_stores_with_coords.xlsx
+            output/geocode_cache.csv
