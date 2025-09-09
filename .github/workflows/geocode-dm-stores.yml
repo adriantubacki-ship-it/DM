@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'DM/dmstores.xlsx'
+      - 'main/dmstores.xlsx'
       - 'scripts/batch_geocode_google.py'
       - '.github/workflows/geocode-dm-stores.yml'
 
@@ -31,7 +31,7 @@ jobs:
         run: |
           mkdir -p output
           python scripts/batch_geocode_google.py \
-            --input "DM/dmstores.xlsx" \
+            --input "main/dmstores.xlsx" \
             --output "output/dm_stores_with_coords.xlsx" \
             --cache "output/geocode_cache.csv" \
             --sleep 0.05
